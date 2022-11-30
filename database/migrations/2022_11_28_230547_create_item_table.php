@@ -14,7 +14,7 @@ return new class extends Migration
      * Table name
      * @var string
      */
-    protected string $table = 'item';
+    protected string $table = 'items';
     /**
      * Run the migrations.
      *
@@ -25,9 +25,9 @@ return new class extends Migration
         Schema::create($this->table, function (Blueprint $table) {
             $table->id();
             $table->string('name')->default('');
-            $table->enum('tax_category', ['Book', 'Food', 'Medicine', 'Miscellaneous'])->default('Miscellaneous');
+            $table->float('sales_tax_rate')->default(10);
             $table->float('import_tax_rate')->default(5);
-            $table->float('sales_tax_rate')->default(0);
+            $table->enum('tax_category', ['Book', 'Food', 'Medicine', 'Miscellaneous'])->default('Miscellaneous');
             $table->float('price');
             $table->string('description');
             $table->timestamps();

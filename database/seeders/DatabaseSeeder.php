@@ -2,9 +2,14 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Item;
 use Illuminate\Database\Seeder;
 
+/**
+ * Database Seeder Class
+ *
+ * Database seeder class is a center point to call all the other seeders.
+ */
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -14,11 +19,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+       Item::factory(20)->create();
     }
 }
