@@ -9,6 +9,7 @@ class Item extends Model
 {
     use HasFactory;
 
+    protected $table = 'items';
     /**
      * fillable attributes defined. Only these properties will be mass-assignable
      * @var string[]
