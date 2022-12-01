@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Http\Controllers\Items\ItemRepository;
 use App\Models\Item;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\URL;
@@ -47,10 +48,14 @@ class ItemControllerTest extends TestCase
     public function testCalculate(): void
     {
         $items = Item::factory(3)->create();
-        $this
+        $itemIds = $items->pluck('id');
+        $response = $this
             ->postJson(URL::route('items.calculate'), [
-                $items
+                "item_ids" => $itemIds,
             ])
             ->assertStatus(200);
+        $itemRepository = new ItemRepository();
+        $calculatedTotalTax = $itemRepository->calculate($itemIds);
+        $this->assertEquals($calculatedTotalTax, $response->content());
     }
 }
