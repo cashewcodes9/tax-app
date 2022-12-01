@@ -24,12 +24,33 @@ class ItemControllerTest extends TestCase
         parent::setUp();
     }
 
+    /**
+     *
+     * Testing Item index resource
+     *
+     * @return void
+     */
     public function testListItems(): void
     {
         Item::factory(10)->Create();
 
          $this
             ->getJson(URL::route('items.index'))
+            ->assertStatus(200);
+    }
+
+    /**
+     * Testing calculate tax for selected items
+     *
+     * @return void
+     */
+    public function testCalculate(): void
+    {
+        $items = Item::factory(3)->create();
+        $this
+            ->postJson(URL::route('items.calculate'), [
+                $items
+            ])
             ->assertStatus(200);
     }
 }

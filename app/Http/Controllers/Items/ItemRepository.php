@@ -10,7 +10,7 @@
 namespace App\Http\Controllers\Items;
 
 use App\Models\Item;
-use Illuminate\Support\Collection;
+use Illuminate\Contracts\Support\Jsonable;
 
 /**
  * ItemRepository Class
@@ -22,10 +22,10 @@ class ItemRepository
     /**
      * Return list of Items with pagination
      *
-     * @return Collection
+     * @return Jsonable
      */
-    public function index(): Collection
+    public function index(): Jsonable
     {
-        return Item::all()->collect();
+        return Item::all();
     }
 }
