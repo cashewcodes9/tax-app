@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Items;
 
 use App\Models\Item;
 use Illuminate\Contracts\Support\Jsonable;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * ItemRepository Class
@@ -27,5 +28,28 @@ class ItemRepository
     public function index(): Jsonable
     {
         return Item::all();
+    }
+
+    /**
+     * calculate and return the sales tax for the items
+     *
+     * @param $itemIds
+     * @return Jsonable
+     */
+    public function calculate($itemIds): Jsonable
+    {
+    //TODO:: add logic to calculate tax for items
+        return $itemIds;
+    }
+
+    /**
+     * Returns and item by id
+     *
+     * @param int $uid
+     * @return Model|null
+     */
+    private function getById(int $uid): ?Model
+    {
+        return Item::query()->find($uid);
     }
 }

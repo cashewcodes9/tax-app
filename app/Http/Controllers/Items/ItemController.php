@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Items;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ItemCollection;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -18,14 +19,37 @@ class ItemController extends Controller
      */
     private ItemRepository $itemRepository;
 
+    /**
+     * Item controller constructor
+     *
+     * @param ItemRepository $itemRepository
+     */
     public function __construct(ItemRepository $itemRepository)
     {
         $this->itemRepository = $itemRepository;
     }
 
-    public function index(): JsonResponse
+    /**
+     * Index method return list of items
+     *
+     * @return ItemCollection
+     */
+    public function index(): ItemCollection
     {
         $items = $this->itemRepository->index();
-        return response()->json($items);
+        return new ItemCollection($items);
     }
+
+    /**
+     * Calculate the sales tax for items
+     *
+     * @param $itemIds
+     * @return JsonResponse
+     */
+    public function calculate($itemIds): JsonResponse
+    {
+        $result = $this->itemRepository->calculate($itemIds);
+        return response()->json($result);
+    }
+
 }
