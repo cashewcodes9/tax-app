@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Items;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ItemCalculateRequest;
 use App\Http\Resources\ItemCollection;
 use Illuminate\Http\JsonResponse;
 
@@ -43,11 +44,12 @@ class ItemController extends Controller
     /**
      * Calculate the sales tax for items
      *
-     * @param $itemIds
+     * @param ItemCalculateRequest $request
      * @return JsonResponse
      */
-    public function calculate($itemIds): JsonResponse
+    public function calculate(ItemCalculateRequest $request): JsonResponse
     {
+        $itemIds = $request->input("item_ids");
         $result = $this->itemRepository->calculate($itemIds);
         return response()->json($result);
     }

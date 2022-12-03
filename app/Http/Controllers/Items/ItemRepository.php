@@ -34,12 +34,22 @@ class ItemRepository
      * calculate and return the sales tax for the items
      *
      * @param $itemIds
-     * @return Jsonable
+     * @return float
      */
-    public function calculate($itemIds): Jsonable
+    public function calculate($itemIds): float
     {
-    //TODO:: add logic to calculate tax for items
-        return $itemIds;
+        $taxCounter = 0;
+
+        foreach ($itemIds as $itemId)  {
+            $item = $this->getById($itemId);
+            // returns the rounded value of sales tax with precision 2 i.e nearest 0.05
+            if ($item) {
+                $salesTax = round(($item->sales_tax_rate * $item->price)/100, 2);
+                $importTax = round(($item->import_tax_rate * $item->price)/100, 2);
+                $taxCounter = $taxCounter + $salesTax + $importTax;
+            }
+        }
+        return  $taxCounter;
     }
 
     /**
