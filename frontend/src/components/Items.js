@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from  'react'
 import Container from 'react-bootstrap/Container'
-import {ListGroup, Badge, Row, Col, Button} from "react-bootstrap";
+import {ListGroup, Badge, Row, Col, Button, Card} from "react-bootstrap";
 
 const Items = () => {
     const [items, setItems] = useState([])
     const [cartItems, setCartItems] = useState([])
     const [itemIds, setItemIds] = useState([])
+    const [totalTax, setTotalTax] = useState()
 
     const getItems = async () => {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/items`)
@@ -18,26 +19,41 @@ const Items = () => {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/items/calculate`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ item_ids: []  })
+            body: JSON.stringify({'item_ids' : itemIds})
+        }).then((res) => {
+            return res.json()
         })
+        setTotalTax(response)
     }
 
+    const removeFromCart = (el) => {
+
+        let newArray = cartItems
+            newArray.splice(el.index, 1)
+        setCartItems(newArray)
+        let hardCopyIds = [...itemIds]
+        hardCopyIds.pop(el.id)
+        setItemIds(hardCopyIds)
+    }
 
     const addToCart = (el) => {
-        setCartItems([...cartItems , el])
+        let newArray = [...cartItems]
+        newArray.push(el)
+        setCartItems(newArray)
         setItemIds([...itemIds, el.id])
     }
 
     useEffect(() => {
         getItems()
-    }, [ ])
+    }, [])
 
     return (
         <Container className="pt-md-4 pb-md-4 ">
-            <Row>
-                <Col xs={12} md={6} className="pt-md-4 pb-md-4 bg-light border">
+            <Row style={{gap: '52px'}}>
+                <Col style={{boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px'}} className="pt-4 pb-4 ps-4 pe-4 bg-light border">
+                    <h3> Item List </h3>
                     {items.length > 0 && (
-                        <ListGroup as="ol" numbered className='pt-md-4'>
+                        <ListGroup as="ol" numbered className='pt-md-4 pb-md-4'>
                             {items.map(item => (
                                 <ListGroup.Item
                                     key={item.id}
@@ -63,16 +79,23 @@ const Items = () => {
                         </ListGroup>
                     )}
                 </Col>
-                <Col xs={12} md={6} className="pt-4 pb-4 pl-4  bg-light border">
+                <Col style={{boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px'}} className="pt-4 pb-4 ps-4 pe-4 bg-light border">
+                    <h3>Cart</h3>
+                    <h5>Please add items to cart to calculate Tax.</h5>
+                    { totalTax && (<Card>
+                        <Card.Header>
+                            {totalTax}
+                        </Card.Header>
+                    </Card>)}
                     {cartItems.length > 0 && (
                         <ListGroup as="ol" numbered className="pt-md-4 pb-md-4">
                             <Button ca variant="primary" size="sm" onClick={calculateTax}>
                                 Calculate
                             </Button>
                             <br/>
-                            {cartItems.map(cartItem => (
+                            {cartItems.map((cartItem, index) => (
                                 <ListGroup.Item
-                                    key={cartItem.id}
+                                    key={index}
                                     as="li"
                                     className="d-flex justify-content-between align-items-start"
                                 >
@@ -86,12 +109,27 @@ const Items = () => {
                                         </Badge>{'  '}
                                     </div>
                                     <Button variant="danger" size="sm" onClick={() => {
-                                        addToCart(cartItem)
+                                        removeFromCart({id: cartItem.id, index:index})
                                     }}>
                                         Remove
                                     </Button>{' '}
                                 </ListGroup.Item>
                             ))}
+                        </ListGroup>
+                    )}
+                </Col>
+                <Col style={{boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px'}} className="pt-4 pb-4 ps-4 pe-4 bg-light border">
+                    {totalTax > 0 && (
+                        <ListGroup as="ol" numbered className="pt-md-4 pb-md-4">
+                            {cartItems.map((cartItem) => (
+                                <ListGroup variant="flush">
+                                    <ListGroup.Item>
+                                        {cartItem.name + ': ' + cartItem.price}
+                                    </ListGroup.Item>
+                        
+                                </ListGroup>
+                            ))}
+                            <div>{'Sales tax: ' + totalTax}</div>
                         </ListGroup>
                     )}
                 </Col>
