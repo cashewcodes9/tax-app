@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Item;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 /**
  * ItemCalculateRequest Class
@@ -40,7 +38,10 @@ class ItemCalculateRequest extends FormRequest
     public function messages()
     {
         return [
-            'item_ids.*' => 'The :attribute is invalid.'
+            'item_ids' => [
+                'required' => 'Item ids are missing. please make sure to include item ids.',
+                'array' => 'Error! Invalid data provided.',
+            ]
         ];
     }
 }
