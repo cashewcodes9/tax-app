@@ -49,7 +49,7 @@ class ItemController extends Controller
      */
     public function calculate(ItemCalculateRequest $request): JsonResponse
     {
-        $itemIds = $request->input("item_ids");
+        $itemIds = $request->validated("item_ids");
         $result = $this->itemRepository->calculate($itemIds);
         return response()->json($result);
     }
