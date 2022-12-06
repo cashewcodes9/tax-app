@@ -49,7 +49,8 @@ class ItemRepository
                 $taxCounter = $taxCounter + $salesTax + $importTax;
             }
         }
-        return  $taxCounter;
+        // rounding the final result with precision 2.
+        return  round($taxCounter, 2);
     }
 
     /**
