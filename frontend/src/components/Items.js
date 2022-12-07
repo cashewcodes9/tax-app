@@ -9,10 +9,15 @@ import Card from 'react-bootstrap/Card'
 
 const Items = () => {
 
+    // State with List of items that are fetched from item list API
     const [items, setItems] = useState([])
+    // State with List of items added to cart
     const [cartItems, setCartItems] = useState([])
+    // State with List of item ids which are sent through API to calculate total tax
     const [itemIds, setItemIds] = useState([])
+    // State to store total calculated tax
     const [totalTax, setTotalTax] = useState()
+    //State to store itemQuantity or count
     const [itemQuantity, setItemQuantity] = useState([])
 
     //
@@ -85,10 +90,12 @@ const Items = () => {
             let newArray = [...cartItems]
             newArray.push(el)
             setCartItems(newArray)
+            //handling item count while adding item to cart
             let quantityArray = [...itemQuantity]
             quantityArray.push({itemId: el.id, itemCount: 1})
             setItemQuantity(quantityArray)
         }
+        //setting itemIds array
         setItemIds([...itemIds, el.id])
 
     }
@@ -98,7 +105,7 @@ const Items = () => {
      *
      * @param item
      */
-    const itemCounter = (item) => {
+     const itemCounter = (item) => {
         let itemIndex = itemQuantity.findIndex((el) => el.itemId === item.id)
         let newArray = [...itemQuantity]
         newArray[itemIndex] = {itemId: item.id, itemCount: itemQuantity[itemIndex].itemCount += 1}
@@ -106,16 +113,22 @@ const Items = () => {
     }
 
     /**
-     * totalPrice: calculate the total price of items
+     * totalPrice: calculate the total price of items accounting quantity of each item
      *
      * @type {string}
      */
-    const totalPrice = cartItems
-        .reduce((total, { price = 0}) => total + price, 0)
-        .toFixed(2)
+    const totalPrice = cartItems.reduce(
+        (total, currentItem) =>
+            total + currentItem.price *
+            itemQuantity[itemQuantity
+                .findIndex(
+                    (el) => el.itemId === currentItem.id
+                )].itemCount
+            , 0
+        ).toFixed(2)
 
-    // UseEffect functions
 
+    // UseEffects
     useEffect(() => {
         getItems()
     }, [])
@@ -137,7 +150,6 @@ const Items = () => {
                                     as="li"
                                     className="d-flex justify-content-between align-items-start"
                                 >
-
                                     <div className="ms-2 me-auto">
                                         <div className="fw-bold">{'Name: ' + item.name }</div>
 
@@ -165,7 +177,7 @@ const Items = () => {
                                  {
                                         return (
                                             <ListGroup.Item
-                                                key={index}
+                                                key={index + 'itemList'}
                                                 as="li"
                                                 className="d-flex justify-content-between align-items-start"
                                             >
@@ -196,11 +208,13 @@ const Items = () => {
                     {totalTax > 0 && (
                         <Card>
                             <ListGroup as="ol" numbered className="pt-md-4 pb-md-4">
-                                {cartItems.map((cartItem) => (
+                                {cartItems.map((cartItem, index) => (
                                     <ListGroup variant="flush">
-                                        <ListGroup.Item>
+                                        <ListGroup.Item
+                                            key={index + 'itemList'}
+                                        >
                                             <Badge bg="secondary" pill>
-                                                {'$' + cartItem.price}
+                                                Count: {itemQuantity[index]?.itemCount}
                                             </Badge>{'  '}
                                             {cartItem.name + ': ' + '$' + cartItem.price}
                                         </ListGroup.Item>
