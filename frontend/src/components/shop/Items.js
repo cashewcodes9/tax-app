@@ -6,11 +6,12 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
 import Card from 'react-bootstrap/Card'
+import { ItemService } from '../../services/ItemService'
 
-const Items = () => {
-
+const Items = (props) => {
+    const {shopItems} = props
     // State with List of items that are fetched from item list API
-    const [items, setItems] = useState([])
+    const [items, setItems] = useState(shopItems)
     // State with List of items added to cart
     const [cartItems, setCartItems] = useState([])
     // State with List of item ids which are sent through API to calculate total tax
@@ -19,35 +20,6 @@ const Items = () => {
     const [totalTax, setTotalTax] = useState(0)
     //State to store itemQuantity or count
     const [itemQuantity, setItemQuantity] = useState([])
-
-    //
-    /**
-     * getItems Function: Responsible for calling api and getting item lists from backend
-     *
-     * @returns {Promise<void>}
-     */
-    const getItems = async () => {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/items`)
-
-        const data = await response.json()
-        setItems(data.data.items)
-    }
-
-    /**
-     * calculateTax Function: Responsible for calling api and getting total tax of items in cart
-     *
-     * @returns {Promise<void>}
-     */
-    const calculateTax = async () => {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/items/calculate`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({'item_ids' : itemIds})
-        }).then((res) => {
-            return res.json()
-        })
-        setTotalTax(response)
-    }
 
     /**
      * removeFromCart Function: Responsible for removing item from cart
@@ -127,17 +99,15 @@ const Items = () => {
             , 0
         ).toFixed(2)
 
-    // UseEffects
     useEffect(() => {
-        getItems()
-    }, [])
-
-    useEffect(() => {
-        calculateTax()
+        ItemService.calculateTax(itemIds).then((res) => {
+            setTotalTax(res)
+        })
     }, [itemIds])
 
     return (
         <Container className="pt-md-4 pb-md-4 ">
+            <h3 className='text-center'> Welcome to Tax-app</h3>
             <Row style={{gap: '52px'}}>
                 <Col style={{boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px'}} className="pt-4 pb-4 ps-4 pe-4 bg-light border">
                     <h3> Item List </h3>
