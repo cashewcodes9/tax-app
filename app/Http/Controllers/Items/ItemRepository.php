@@ -44,8 +44,11 @@ class ItemRepository
             $item = $this->getById($itemId);
             // returns the rounded value of sales tax with precision 2 i.e nearest 0.05
             if ($item) {
-                $salesTax = round(($item->sales_tax_rate * $item->price)/100, 2);
-                $importTax = round(($item->import_tax_rate * $item->price)/100, 2);
+
+                $salesTax = $item->tax_category == Item::MISCELLANEOUS ?
+                    round(($item->sales_tax_rate * $item->price)/100, 2) : 0;
+
+                $importTax = $item->imported ? round(($item->import_tax_rate * $item->price)/100, 2) : 0;
                 $taxCounter = $taxCounter + $salesTax + $importTax;
             }
         }
