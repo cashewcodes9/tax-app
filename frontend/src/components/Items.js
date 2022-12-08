@@ -16,7 +16,7 @@ const Items = () => {
     // State with List of item ids which are sent through API to calculate total tax
     const [itemIds, setItemIds] = useState([])
     // State to store total calculated tax
-    const [totalTax, setTotalTax] = useState()
+    const [totalTax, setTotalTax] = useState(0)
     //State to store itemQuantity or count
     const [itemQuantity, setItemQuantity] = useState([])
 
@@ -117,7 +117,7 @@ const Items = () => {
      *
      * @type {string}
      */
-    const totalPrice = cartItems.reduce(
+    const totalPriceWithoutTax = cartItems.reduce(
         (total, currentItem) =>
             total + currentItem.price *
             itemQuantity[itemQuantity
@@ -126,7 +126,6 @@ const Items = () => {
                 )].itemCount
             , 0
         ).toFixed(2)
-
 
     // UseEffects
     useEffect(() => {
@@ -186,7 +185,7 @@ const Items = () => {
 
                                                     {' Category: ' + cartItem.tax_category} {'   '}
                                                     <Badge bg="secondary" pill>
-                                                        {'$' + cartItem.price}
+                                                    $ { cartItem.price }
                                                     </Badge>{'  '}
                                                     <Badge bg="success" pill>
                                                         Count: {itemQuantity[index]?.itemCount}
@@ -205,7 +204,7 @@ const Items = () => {
                     )}
                 </Col>
                 <Col style={{boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px'}} className="pt-4 pb-4 ps-4 pe-4 bg-light border">
-                    {totalTax > 0 && (
+                    {itemIds && (
                         <Card>
                             <ListGroup as="ol" numbered className="pt-md-4 pb-md-4">
                                 {cartItems.map((cartItem, index) => (
@@ -223,8 +222,8 @@ const Items = () => {
                                 ))}
                             </ListGroup>
                             <div className='ps-2'>
-                                <div>{'Total tax: ' + '$' + totalTax}</div>
-                                <div>{'Total price: ' + '$' + totalPrice}</div>
+                                <p>Total tax: $ { totalTax }</p>
+                                <p>Total price: $ { (parseFloat(totalTax) + parseFloat(totalPriceWithoutTax)).toFixed(2) }</p>
                             </div>
                         </Card>
                             )}
