@@ -8,13 +8,12 @@ export default function () {
   useEffect(() => {
     ItemService.getItems().then((res) => {
       setShopItems(res.data.items)
-      console.log("test data", res)
     })
   }, [])
   return (
     <div>
       {
-        shopItems && <Items shopItems={shopItems} />
+        shopItems && <Items ItemService={ItemService} items={shopItems} />
       }
 
     </div>
