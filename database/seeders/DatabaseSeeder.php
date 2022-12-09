@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-       Item::factory(20)->create();
+       //Item::factory(20)->create();
+        $this->call(TestSeeder::class);
     }
 }

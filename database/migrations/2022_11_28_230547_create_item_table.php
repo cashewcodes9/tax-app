@@ -29,7 +29,8 @@ return new class extends Migration
             $table->float('import_tax_rate')->default(5);
             $table->enum('tax_category', ['Book', 'Food', 'Medicine', 'Miscellaneous'])->default('Miscellaneous');
             $table->float('price');
-            $table->string('description');
+            $table->boolean('imported')->default(0);
+            $table->string('description')->default('');
             $table->timestamps();
         });
     }
