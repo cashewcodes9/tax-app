@@ -40,7 +40,7 @@ Frontend Test: Inside `frontend` directory in your terminal run `npm test`
 
  ## No time to build, feel free to check my demo video.
 
- If you want to take a quick look at the app with it's functionality and review the code, access the demo video [HERE](https://youtube.com)
+ If you want to take a quick look at the app with it's functionality and review the code, access the demo video [HERE](https://www.youtube.com/watch?v=oUMV22C3zf8)
  
 
  
