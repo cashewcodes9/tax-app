@@ -31,6 +31,13 @@ Please follow the steps to build the application.
  
  4. Now you can visit [Localhost](http://localhost:3000) and use the application.
 
+#### Running tests:
+Backend Test: Run `sail artisan test` command in your terminal inside project directory
+
+Frontend Test: Inside `frontend` directory in your terminal run `npm test`
+
+
+
  ## No time to build, feel free to check my demo video.
 
  If you want to take a quick look at the app with it's functionality and review the code, access the demo video [HERE](https://youtube.com)
